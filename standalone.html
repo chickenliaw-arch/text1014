@@ -1,0 +1,4296 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>楊梅高中分機一覽表 - 互動式校園通訊資訊網</title>
+  <meta name="description" content="桃園市立楊梅高級中學語音電話分機一覽表，提供即時檢索、處室分類瀏覽、大字體清晰顯示、虛擬撥號盤與音效互動體驗。">
+  
+  <!-- 引入 Google Fonts 提升字體質感 (帶本地 fallback) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+/* ========================================================
+   楊梅高中分機一覽表 - 樣式表
+   設計規範：明亮繽紛、大字體高易讀性、支援手機平板電腦、豐富動畫
+   ======================================================== */
+
+:root {
+  /* 基底色彩系統 (明亮、活力、高對比) */
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-light: #64748b;
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+
+  /* 品牌主題色彩 (明亮校園青藍與晨光金) */
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  --primary-700: #1d4ed8;
+
+  /* 處室專屬主題色 (豐富繽紛調色盤) */
+  --color-principal: #d97706;  /* 琥珀金 (校長室與協力) */
+  --color-academic: #0284c7;   /* 天空湛藍 (教務處) */
+  --color-student: #ea580c;    /* 活力暖橘 (學務處與校安) */
+  --color-general: #059669;    /* 生機翠綠 (總務處) */
+  --color-counseling: #7c3aed; /* 溫馨紫羅蘭 (輔導室) */
+  --color-library: #0d9488;    /* 知性湖水綠 (圖書館) */
+  --color-internship: #2563eb; /* 科技科技藍 (實習處) */
+  --color-admin-other: #e11d48;/* 玫瑰珊瑚紅 (人事會計員生社) */
+  --color-teachers: #16a34a;   /* 清新常春綠 (導師與專任辦公室) */
+  --color-classrooms: #9333ea; /* 探索洋紫 (專科教室與實驗室) */
+  --color-buildings: #b45309;  /* 沉穩大地金 (御風樓與生科大樓) */
+
+  /* 字體大小縮放因子 (預設 100%) */
+  --font-scale: 1;
+  --base-font-size: calc(16px * var(--font-scale));
+  --font-title: calc(26px * var(--font-scale));
+  --font-ext: calc(28px * var(--font-scale));
+  --font-name: calc(20px * var(--font-scale));
+  --font-sub: calc(15px * var(--font-scale));
+
+  /* 陰影與圓角 */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px -2px rgba(0,0,0,0.08), 0 2px 6px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(0,0,0,0.1), 0 4px 10px -2px rgba(0,0,0,0.05);
+  --shadow-hover: 0 16px 32px -4px rgba(37,99,235,0.15), 0 6px 12px -2px rgba(0,0,0,0.08);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 全域重置與基礎字體大小保證清晰 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-size: var(--base-font-size);
+  line-height: 1.55;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.04) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.04) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.04) 0px, transparent 50%);
+}
+
+/* 網頁外層容器 */
+.app-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3.5rem;
+}
+
+/* ========================================================
+   Header 頂部大橫幅 (明亮大器、學校風範)
+   ======================================================== */
+.main-header {
+  position: relative;
+  margin: 1.25rem 0 1.5rem;
+  padding: 2.25rem 2rem 1.75rem;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0284c7 100%);
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  box-shadow: 0 12px 30px -6px rgba(30, 58, 138, 0.35);
+  overflow: hidden;
+}
+
+/* 背景裝飾光斑與線條 */
+.header-bg-glow {
+  position: absolute;
+  top: -60px;
+  right: -40px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.28) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: pulseGlow 6s ease-in-out infinite alternate;
+}
+
+.header-bg-glow-2 {
+  position: absolute;
+  bottom: -80px;
+  left: 20%;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+  100% { transform: scale(1.15) translate(-15px, 15px); opacity: 1; }
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.school-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.school-crest-icon {
+  width: 58px;
+  height: 58px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+  transition: transform var(--transition-bounce);
+}
+
+.school-crest-icon:hover {
+  transform: rotate(10deg) scale(1.08);
+}
+
+.school-crest-icon svg {
+  width: 34px;
+  height: 34px;
+  color: #fde047; /* 金黃色象徵陽光楊中 */
+}
+
+.school-title-area h1 {
+  font-size: calc(2.2rem * var(--font-scale));
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.title-badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: rgba(253, 224, 71, 0.25);
+  border: 1px solid #fde047;
+  color: #fef08a;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.school-sub-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: calc(0.95rem * var(--font-scale));
+  color: #e0f2fe;
+  margin-top: 0.25rem;
+}
+
+.sub-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 頂部快捷工具按鈕列 (字體、音效、撥號盤、列印) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--radius-md);
+  font-size: calc(0.95rem * var(--font-scale));
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.action-btn.active {
+  background: #ffffff;
+  color: #1e3a8a;
+  border-color: #ffffff;
+}
+
+/* 總機直撥快捷橫列 (代表號、二線、三線) */
+.switchboard-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.switchboard-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: calc(1.05rem * var(--font-scale));
+  color: #fef08a;
+}
+
+.switchboard-numbers {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.line-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  color: #1e40af;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: calc(1.05rem * var(--font-scale));
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all var(--transition-fast);
+}
+
+.line-chip:hover {
+  background: #fef08a;
+  color: #854d0e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.line-label {
+  font-size: 0.8rem;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+/* ========================================================
+   控制與檢索工具列 (搜尋框、字體調控、分類過濾)
+   ======================================================== */
+.control-panel {
+  position: sticky;
+  top: 1rem;
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.35rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 1.75rem;
+  transition: box-shadow var(--transition-normal);
+}
+
+.control-panel.is-scrolled {
+  box-shadow: var(--shadow-lg);
+  border-color: #cbd5e1;
+}
+
+.search-and-view-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* 搜尋輸入框 (醒目大器) */
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 280px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.85rem 3rem 0.85rem 3.1rem;
+  font-size: calc(1.1rem * var(--font-scale));
+  border: 2px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: var(--text-main);
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--primary-600);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e2e8f0;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  transition: background var(--transition-fast);
+}
+
+.search-clear-btn:hover {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+.search-clear-btn.visible {
+  display: flex;
+}
+
+/* 檢視切換與常用篩選 */
+.view-toggles {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.75rem 1.1rem;
+  border: 2px solid #e2e8f0;
+  background: #ffffff;
+  color: #334155;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: calc(0.95rem * var(--font-scale));
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.view-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.view-btn.active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+/* 分類標籤滑動膠囊列 (Category Pills) */
+.category-pills-wrap {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 0.35rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-pills-wrap::-webkit-scrollbar {
+  height: 5px;
+}
+.category-pills-wrap::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: calc(0.95rem * var(--font-scale));
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.pill-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.pill-btn.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.pill-count {
+  font-size: 0.8em;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.pill-btn.active .pill-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ========================================================
+   狀態欄 (搜尋結果統計、快捷切換常用)
+   ======================================================== */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 0 0.5rem;
+}
+
+.status-text {
+  font-size: calc(1rem * var(--font-scale));
+  color: #475569;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-highlight {
+  color: #2563eb;
+  font-weight: 800;
+  font-size: 1.15em;
+}
+
+.quick-hints {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: calc(0.88rem * var(--font-scale));
+  color: #64748b;
+}
+
+.hint-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #f1f5f9;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e2e8f0;
+}
+
+/* ========================================================
+   分機卡片網格 (響應式：手機單欄，平板雙欄，電腦三～四欄)
+   ======================================================== */
+.directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1.35rem;
+}
+
+/* 單個分機卡片 */
+.ext-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 1.35rem 1.35rem 1.15rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all var(--transition-normal);
+  overflow: hidden;
+  border-top-width: 5px; /* 上緣多彩處室代表色標 */
+}
+
+.ext-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-hover);
+}
+
+/* 處室卡片色彩定制（頂部條） */
+.ext-card[data-dept-cat="principal"] { border-top-color: var(--color-principal); }
+.ext-card[data-dept-cat="academic"] { border-top-color: var(--color-academic); }
+.ext-card[data-dept-cat="student"] { border-top-color: var(--color-student); }
+.ext-card[data-dept-cat="general"] { border-top-color: var(--color-general); }
+.ext-card[data-dept-cat="counseling"] { border-top-color: var(--color-counseling); }
+.ext-card[data-dept-cat="library"] { border-top-color: var(--color-library); }
+.ext-card[data-dept-cat="internship"] { border-top-color: var(--color-internship); }
+.ext-card[data-dept-cat="admin_other"] { border-top-color: var(--color-admin-other); }
+.ext-card[data-dept-cat="teachers"] { border-top-color: var(--color-teachers); }
+.ext-card[data-dept-cat="classrooms"] { border-top-color: var(--color-classrooms); }
+.ext-card[data-dept-cat="buildings"] { border-top-color: var(--color-buildings); }
+
+/* 處室徽章專屬多彩背景與文字 */
+.ext-card[data-dept-cat="principal"] .dept-badge { background: #fef3c7; color: #92400e; }
+.ext-card[data-dept-cat="academic"] .dept-badge { background: #e0f2fe; color: #0369a1; }
+.ext-card[data-dept-cat="student"] .dept-badge { background: #ffedd5; color: #c2410c; }
+.ext-card[data-dept-cat="general"] .dept-badge { background: #dcfce7; color: #15803d; }
+.ext-card[data-dept-cat="counseling"] .dept-badge { background: #f3e8ff; color: #6b21a8; }
+.ext-card[data-dept-cat="library"] .dept-badge { background: #ccfbf1; color: #0f766e; }
+.ext-card[data-dept-cat="internship"] .dept-badge { background: #dbeafe; color: #1e40af; }
+.ext-card[data-dept-cat="admin_other"] .dept-badge { background: #ffe4e6; color: #be123c; }
+.ext-card[data-dept-cat="teachers"] .dept-badge { background: #dcfce7; color: #166534; }
+.ext-card[data-dept-cat="classrooms"] .dept-badge { background: #fae8ff; color: #86198f; }
+.ext-card[data-dept-cat="buildings"] .dept-badge { background: #fef3c7; color: #854d0e; }
+
+.card-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.dept-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: calc(0.85rem * var(--font-scale));
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: #f1f5f9;
+  color: #334155;
+  letter-spacing: 0.02em;
+}
+
+.card-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.icon-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.icon-btn.favorite-btn:hover,
+.icon-btn.favorite-btn.is-favorite {
+  color: #f59e0b;
+}
+
+.icon-btn.tts-btn:hover {
+  color: #2563eb;
+}
+
+/* 核心內容區 (職稱與姓名) */
+.card-identity {
+  margin-bottom: 1rem;
+}
+
+.card-title-text {
+  font-size: calc(1.05rem * var(--font-scale));
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.card-name-text {
+  font-size: var(--font-name);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+/* 分機號碼大字塊 (超大、清晰、點擊可直接撥號/複製) */
+.card-ext-box {
+  background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+  border: 1.5px dashed #cbd5e1;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.card-ext-box:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  border-style: solid;
+}
+
+.ext-num-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.ext-label {
+  font-size: calc(0.75rem * var(--font-scale));
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.05em;
+}
+
+.ext-digits {
+  font-size: var(--font-ext);
+  font-weight: 900;
+  color: #1e40af;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.ext-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ext-call-chip,
+.ext-copy-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: calc(0.85rem * var(--font-scale));
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ext-call-chip {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.ext-call-chip:hover {
+  background: #1d4ed8;
+  transform: scale(1.05);
+}
+
+.ext-copy-chip {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+.ext-copy-chip:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* 卡片額外資訊列 (直撥專線、傳真、位置) */
+.card-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid #f1f5f9;
+  font-size: var(--font-sub);
+  color: #475569;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.4;
+}
+
+.meta-icon {
+  width: 16px;
+  height: 16px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.meta-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.meta-link:hover {
+  text-decoration: underline;
+}
+
+.meta-tag {
+  background: #f1f5f9;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* ========================================================
+   詳細表格檢視 (Table View 模式)
+   ======================================================== */
+.directory-table-wrap {
+  display: none;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+
+.directory-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: calc(1rem * var(--font-scale));
+}
+
+.directory-table th {
+  background: #f8fafc;
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+  color: #334155;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.directory-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  vertical-align: middle;
+}
+
+.directory-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table-ext-cell {
+  font-size: calc(1.2rem * var(--font-scale));
+  font-weight: 800;
+  color: #1d4ed8;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================================
+   空搜尋狀態 (Empty State)
+   ======================================================== */
+.empty-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+  text-align: center;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 2px dashed #cbd5e1;
+  margin-top: 1.5rem;
+}
+
+.empty-state-icon {
+  width: 72px;
+  height: 72px;
+  color: #94a3b8;
+  margin-bottom: 1.25rem;
+}
+
+.empty-state-title {
+  font-size: calc(1.35rem * var(--font-scale));
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-desc {
+  font-size: calc(1rem * var(--font-scale));
+  color: #64748b;
+  max-width: 420px;
+  margin-bottom: 1.5rem;
+}
+
+.reset-search-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.reset-search-btn:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* ========================================================
+   互動式虛擬撥號盤彈窗 (Virtual Dial Pad Modal)
+   ======================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dialpad-card {
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transform: scale(0.92) translateY(20px);
+  transition: transform var(--transition-bounce);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-overlay.active .dialpad-card {
+  transform: scale(1) translateY(0);
+}
+
+.dialpad-header {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dialpad-header h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dialpad-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.dialpad-close-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.dialpad-screen {
+  background: #f8fafc;
+  padding: 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.dialpad-digits {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #1e3a8a;
+  min-height: 48px;
+  line-height: 48px;
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+.dialpad-match-preview {
+  margin-top: 0.5rem;
+  min-height: 24px;
+  font-size: 0.95rem;
+  color: #059669;
+  font-weight: 700;
+}
+
+.dialpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  padding: 1.5rem 1.75rem 1rem;
+}
+
+.dial-key {
+  aspect-ratio: 1;
+  max-width: 72px;
+  margin: 0 auto;
+  width: 100%;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.dial-key:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.dial-key:active {
+  background: #2563eb;
+  color: #ffffff;
+  transform: scale(0.95);
+}
+
+.dial-key:active .dial-sub {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.dial-num {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dial-sub {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.dialpad-bottom-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.5rem 1.75rem 1.5rem;
+}
+
+.dial-action-btn {
+  background: transparent;
+  border: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: #64748b;
+}
+
+.dial-action-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.dial-call-btn {
+  background: #16a34a;
+  color: #ffffff;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4);
+}
+
+.dial-call-btn:hover {
+  background: #15803d;
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+/* ========================================================
+   Toast 提示訊息浮窗
+   ======================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast-msg {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.85rem 1.35rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  font-size: calc(0.95rem * var(--font-scale));
+  font-weight: 600;
+  animation: slideToastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+@keyframes slideToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-msg.toast-fadeout {
+  animation: slideToastOut 0.25s ease forwards;
+}
+
+@keyframes slideToastOut {
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+}
+
+.toast-icon {
+  width: 22px;
+  height: 22px;
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+/* ========================================================
+   回頂端按鈕 (Back to Top)
+   ======================================================== */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #1e3a8a;
+  border: 2px solid #e2e8f0;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all var(--transition-normal);
+}
+
+.back-to-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.back-to-top-btn:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ========================================================
+   頁尾 Footer
+   ======================================================== */
+.main-footer {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  color: #64748b;
+  font-size: calc(0.95rem * var(--font-scale));
+}
+
+.footer-school {
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.35rem;
+}
+
+/* 關鍵字高亮 */
+.search-highlight {
+  background-color: #fef08a;
+  color: #854d0e;
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+  font-weight: 800;
+}
+
+/* ========================================================
+   友善列印樣式 (@media print)
+   ======================================================== */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+  .header-actions,
+  .control-panel,
+  .back-to-top-btn,
+  .toast-container,
+  .modal-overlay,
+  .card-quick-actions,
+  .ext-call-chip,
+  .ext-copy-chip {
+    display: none !important;
+  }
+  .main-header {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    padding: 1rem !important;
+  }
+  .switchboard-card {
+    background: transparent !important;
+    border: 1px solid #666 !important;
+    color: #000 !important;
+  }
+  .directory-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+  .ext-card {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    padding: 0.75rem !important;
+  }
+}
+
+/* ========================================================
+   行動裝置優化 (@media max-width: 640px)
+   ======================================================== */
+@media (max-width: 640px) {
+  .app-container {
+    padding: 0 0.75rem 2.5rem;
+  }
+  .main-header {
+    padding: 1.5rem 1.25rem;
+    border-radius: var(--radius-md);
+    margin: 0.75rem 0 1rem;
+  }
+  .school-title-area h1 {
+    font-size: 1.6rem;
+  }
+  .school-crest-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .control-panel {
+    top: 0.5rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+  }
+  .directory-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .switchboard-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .switchboard-numbers {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .line-chip {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.95rem;
+  }
+}
+
+</style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- ==================== Header 頂部大橫幅 ==================== -->
+    <header class="main-header" role="banner">
+      <!-- 背景動態光斑 -->
+      <div class="header-bg-glow"></div>
+      <div class="header-bg-glow-2"></div>
+
+      <div class="header-content">
+        <!-- 頂部：標題與快捷功能列 -->
+        <div class="header-top">
+          <div class="school-badge-wrap">
+            <div class="school-crest-icon" aria-hidden="true" title="桃園市立楊梅高級中學">
+              <!-- 校園意象徽章圖示 (書本與校園之光) -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                <circle cx="12" cy="9" r="2.5" fill="#fde047" stroke="none"/>
+                <path d="M12 4v2.5M12 11.5V14M8.5 9H6M18 9h-2.5"/>
+              </svg>
+            </div>
+            <div class="school-title-area">
+              <h1>
+                楊梅高中分機一覽表
+                <span class="title-badge">官方分機一覽</span>
+              </h1>
+              <div class="school-sub-info">
+                <span class="sub-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  編製：總務處
+                </span>
+                <span class="sub-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  版本：115/09/07
+                </span>
+                <span class="sub-item">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  桃園市楊梅區高獅路1號
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 頂部工具按鈕 (字體縮放、音效、撥號盤、列印) -->
+          <div class="header-actions">
+            <!-- 字體切換鈕 -->
+            <button id="btnFontSize" class="action-btn" title="切換字體大小（正常/大字/特大）">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+              <span id="fontSizeLabel">字體: 正常</span>
+            </button>
+
+            <!-- 音效開關切換 -->
+            <button id="btnSoundToggle" class="action-btn active" title="開啟或關閉操作互動音效">
+              <svg id="soundIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+              <span id="soundLabel">音效: 開啟</span>
+            </button>
+
+            <!-- 虛擬電話撥號盤 -->
+            <button id="btnDialPad" class="action-btn" title="開啟互動式電話撥號鍵盤（含 DTMF 撥號音）">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <span>📞 撥號盤</span>
+            </button>
+
+            <!-- 友善列印按鈕 -->
+            <button id="btnPrint" class="action-btn" title="友善列印本頁分機一覽表">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>列印</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 總機直撥快捷條 (代表號、二線、三線) -->
+        <div class="switchboard-card">
+          <div class="switchboard-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>學校總機專線（點擊撥打）：</span>
+          </div>
+          <div class="switchboard-numbers">
+            <a href="tel:034789618" class="line-chip" title="撥打總機代表號 03-4789618">
+              <span class="line-label">代表號</span>
+              <span>03-4789618</span>
+            </a>
+            <a href="tel:034780449" class="line-chip" title="撥打總機二線 03-4780449">
+              <span class="line-label">二線</span>
+              <span>4780449</span>
+            </a>
+            <a href="tel:034780740" class="line-chip" title="撥打總機三線 03-4780740">
+              <span class="line-label">三線</span>
+              <span>4780740</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== 控制與檢索面板 (置頂浮動) ==================== -->
+    <section class="control-panel" id="controlPanel" aria-label="檢索與分類控制">
+      <div class="search-and-view-row">
+        <!-- 搜尋輸入框 -->
+        <div class="search-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="快速檢索：輸入分機號碼、姓名（例：李主任）、處室、職稱或教室..." 
+            autocomplete="off" 
+            spellcheck="false"
+            aria-label="檢索分機"
+          />
+          <button id="searchClearBtn" class="search-clear-btn" title="清除搜尋文字" aria-label="清除搜尋">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <!-- 常用收藏與檢視模式切換 -->
+        <div class="view-toggles">
+          <button id="btnViewFavorites" class="view-btn" title="查看我已加星號收藏的常用分機">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>常用分機</span>
+          </button>
+          <button id="btnViewGrid" class="view-btn active" title="網格卡片檢視">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>卡片</span>
+          </button>
+          <button id="btnViewTable" class="view-btn" title="詳細表格檢視">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <span>條列</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 處室分類膠囊列 (水平捲動滑動條) -->
+      <nav class="category-pills-wrap" id="categoryPillsWrap" aria-label="處室分類"></nav>
+    </section>
+
+    <!-- ==================== 狀態列與快速提示 ==================== -->
+    <div class="status-bar">
+      <div class="status-text" id="statusCount">載入中...</div>
+      <div class="quick-hints">
+        <span class="hint-badge">💡 提示：點擊任何分機號碼即可「一鍵複製」</span>
+        <span class="hint-badge">📱 支援手機直撥與語音朗讀</span>
+      </div>
+    </div>
+
+    <!-- ==================== 分機卡片網格 (Card View) ==================== -->
+    <main id="directoryGrid" class="directory-grid" role="region" aria-label="分機卡片列表"></main>
+
+    <!-- ==================== 詳細表格檢視 (Table View) ==================== -->
+    <div id="directoryTableWrap" class="directory-table-wrap" role="region" aria-label="分機表格列表">
+      <table class="directory-table">
+        <thead>
+          <tr>
+            <th style="width: 40px; text-align: center;">收藏</th>
+            <th>單位處室</th>
+            <th>職稱</th>
+            <th>姓名 / 人員</th>
+            <th>分機號碼</th>
+            <th>地點位置</th>
+            <th>專線電話</th>
+            <th>快速操作</th>
+          </tr>
+        </thead>
+        <tbody id="directoryTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ==================== 無搜尋結果狀態 ==================== -->
+    <div class="empty-state" id="emptyState">
+      <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      <div class="empty-state-title">找不到符合的分機資料</div>
+      <div class="empty-state-desc">請檢查是否有錯字，或試著搜尋關鍵字，例如「教務」、「學務」、「主任」或「分機號碼」。</div>
+      <button class="reset-search-btn" id="resetSearchBtn">清除搜尋條件，顯示全部</button>
+    </div>
+
+    <!-- ==================== 頁尾資訊 ==================== -->
+    <footer class="main-footer" role="contentinfo">
+      <p class="footer-school">桃園市立楊梅高級中學 (Taoyuan Municipal Yang-Mei Senior High School)</p>
+      <p>校址：326002 桃園市楊梅區高獅路1號 ｜ 總機代表號：03-4789618 ｜ 傳真：03-4757034</p>
+      <p style="margin-top: 0.5rem; font-size: 0.88em; color: #94a3b8;">本互動式分機資訊網依據 115/09/07 總務處官方編製版本建置 ｜ 支援無障礙大字體、手機/平板/電腦全平台自適應</p>
+    </footer>
+
+  </div>
+
+  <!-- ==================== 互動式虛擬撥號盤彈窗 (Virtual Dial Pad Modal) ==================== -->
+  <div class="modal-overlay" id="dialModal" role="dialog" aria-modal="true" aria-labelledby="dialModalTitle">
+    <div class="dialpad-card">
+      <div class="dialpad-header">
+        <h3 id="dialModalTitle">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          楊梅高中虛擬電話
+        </h3>
+        <button class="dialpad-close-btn" id="dialCloseBtn" title="關閉撥號盤" aria-label="關閉">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- 撥號螢幕 -->
+      <div class="dialpad-screen">
+        <div class="dialpad-digits" id="dialScreenDigits">—</div>
+        <div class="dialpad-match-preview" id="dialMatchPreview">請輸入 4 碼分機號碼</div>
+      </div>
+
+      <!-- 電話按鍵 (1-9, *, 0, #) 支援 DTMF 雙音多頻 -->
+      <div class="dialpad-grid">
+        <button class="dial-key" data-dial-val="1"><span class="dial-num">1</span><span class="dial-sub">.</span></button>
+        <button class="dial-key" data-dial-val="2"><span class="dial-num">2</span><span class="dial-sub">ABC</span></button>
+        <button class="dial-key" data-dial-val="3"><span class="dial-num">3</span><span class="dial-sub">DEF</span></button>
+        <button class="dial-key" data-dial-val="4"><span class="dial-num">4</span><span class="dial-sub">GHI</span></button>
+        <button class="dial-key" data-dial-val="5"><span class="dial-num">5</span><span class="dial-sub">JKL</span></button>
+        <button class="dial-key" data-dial-val="6"><span class="dial-num">6</span><span class="dial-sub">MNO</span></button>
+        <button class="dial-key" data-dial-val="7"><span class="dial-num">7</span><span class="dial-sub">PQRS</span></button>
+        <button class="dial-key" data-dial-val="8"><span class="dial-num">8</span><span class="dial-sub">TUV</span></button>
+        <button class="dial-key" data-dial-val="9"><span class="dial-num">9</span><span class="dial-sub">WXYZ</span></button>
+        <button class="dial-key" data-dial-val="*"><span class="dial-num">*</span><span class="dial-sub"> </span></button>
+        <button class="dial-key" data-dial-val="0"><span class="dial-num">0</span><span class="dial-sub">+</span></button>
+        <button class="dial-key" data-dial-val="#"><span class="dial-num">#</span><span class="dial-sub"> </span></button>
+      </div>
+
+      <!-- 底部功能按鈕 (清空、撥打、退格) -->
+      <div class="dialpad-bottom-actions">
+        <button class="dial-action-btn" id="dialClearBtn" title="清空全部號碼">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        </button>
+        <button class="dial-call-btn" id="dialCallBtn" title="模擬撥號通話 / 手機直撥">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </button>
+        <button class="dial-action-btn" id="dialBackspaceBtn" title="刪除最後一位數">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 浮動 Toast 提示容器 ==================== -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- ==================== 回頂端按鈕 ==================== -->
+  <button class="back-to-top-btn" id="backToTopBtn" title="回到頂部" aria-label="回到頂部">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+  </button>
+
+  <!-- 引入模組化程式庫 (依照相依性順序加載) -->
+<script>
+// ==================== DATA ====================
+// 桃園市立楊梅高級中學語音電話分機資料庫
+// 資料版本：115/09/07 總務處編製
+const SCHOOL_CONFIG = {
+  title: "桃園市立楊梅高級中學",
+  subTitle: "語音電話分機一覽表",
+  mainNumber: "03-4789618",
+  mainNumberRaw: "034789618",
+  lines: [
+    { label: "代表號", number: "03-4789618" },
+    { label: "二線", number: "03-4780449" },
+    { label: "三線", number: "03-4780740" }
+  ],
+  version: "115/09/07",
+  compiler: "總務處",
+  address: "桃園市楊梅區高獅路1號"
+};
+
+// 分類與處室定義
+const CATEGORIES = [
+  { id: "all", name: "全部項目", icon: "grid", color: "#4f46e5" },
+  { id: "principal", name: "校長室與協力", icon: "crown", color: "#f59e0b" },
+  { id: "academic", name: "教務處", icon: "book-open", color: "#0284c7" },
+  { id: "student", name: "學務處與校安", icon: "shield", color: "#ea580c" },
+  { id: "general", name: "總務處", icon: "settings", color: "#10b981" },
+  { id: "counseling", name: "輔導室", icon: "heart", color: "#8b5cf6" },
+  { id: "library", name: "圖書館", icon: "library", color: "#059669" },
+  { id: "internship", name: "實習處", icon: "cpu", color: "#0891b2" },
+  { id: "admin_other", name: "人事/會計/員生社", icon: "users", color: "#e11d48" },
+  { id: "teachers", name: "導師與專任室", icon: "graduation-cap", color: "#16a34a" },
+  { id: "classrooms", name: "專科教室與實驗室", icon: "flask-conical", color: "#7c3aed" },
+  { id: "buildings", name: "御風樓與生科大樓", icon: "building", color: "#d97706" }
+];
+
+// 所有分機詳細清單
+const DIRECTORY_ITEMS = [
+  // ==================== 校長室 ====================
+  {
+    id: "p-01",
+    dept: "校長室",
+    category: "principal",
+    title: "校長",
+    name: "鍾校長",
+    extension: "1101",
+    directPhone: "",
+    fax: "4856117",
+    location: "行政大樓 校長室",
+    note: "傳真：4856117"
+  },
+  {
+    id: "p-02",
+    dept: "校長室",
+    category: "principal",
+    title: "秘書",
+    name: "黃秘書",
+    extension: "1102",
+    directPhone: "",
+    fax: "4856117",
+    location: "行政大樓 秘書室",
+    note: ""
+  },
+  {
+    id: "p-03",
+    dept: "校長室",
+    category: "principal",
+    title: "技工",
+    name: "劉小姐",
+    extension: "1103",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 校長室",
+    note: ""
+  },
+  {
+    id: "p-04",
+    dept: "校長室",
+    category: "principal",
+    title: "校長宿舍",
+    name: "校長宿舍",
+    extension: "1104",
+    directPhone: "",
+    fax: "",
+    location: "校長宿舍",
+    note: ""
+  },
+
+  // ==================== 協力組織 ====================
+  {
+    id: "aff-01",
+    dept: "協力組織",
+    category: "principal",
+    title: "警衛室",
+    name: "警衛室值勤人員",
+    extension: "1110",
+    directPhone: "",
+    fax: "",
+    location: "學校正門 警衛室",
+    note: "大門門禁及訪客登記"
+  },
+  {
+    id: "aff-02",
+    dept: "協力組織",
+    category: "principal",
+    title: "聯合辦公室",
+    name: "聯合辦公室",
+    extension: "1112",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓",
+    note: ""
+  },
+  {
+    id: "aff-03",
+    dept: "協力組織",
+    category: "principal",
+    title: "第一會議室",
+    name: "第一會議室",
+    extension: "1113",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 1樓",
+    note: "會議場地"
+  },
+  {
+    id: "aff-04",
+    dept: "協力組織",
+    category: "principal",
+    title: "交通安全教室",
+    name: "交通安全教室",
+    extension: "1114",
+    directPhone: "",
+    fax: "",
+    location: "教學區",
+    note: ""
+  },
+  {
+    id: "aff-05",
+    dept: "協力組織",
+    category: "principal",
+    title: "第二會議室",
+    name: "第二會議室",
+    extension: "1115",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓",
+    note: "會議場地"
+  },
+
+  // ==================== 人事室 ====================
+  {
+    id: "hr-01",
+    dept: "人事室",
+    category: "admin_other",
+    title: "主任",
+    name: "邱主任",
+    extension: "1121",
+    directPhone: "03-4784103",
+    fax: "03-4755774",
+    location: "行政大樓 人事室",
+    note: "專線: 4784103 / 傳真: 4755774"
+  },
+  {
+    id: "hr-02",
+    dept: "人事室",
+    category: "admin_other",
+    title: "組員",
+    name: "陳先生",
+    extension: "1122",
+    directPhone: "03-4784103",
+    fax: "03-4755774",
+    location: "行政大樓 人事室",
+    note: ""
+  },
+
+  // ==================== 會計室 ====================
+  {
+    id: "acc-01",
+    dept: "會計室",
+    category: "admin_other",
+    title: "主任",
+    name: "林主任",
+    extension: "1131",
+    directPhone: "03-4789683",
+    fax: "03-4782322",
+    location: "行政大樓 會計室",
+    note: "專線: 4789683 / 傳真: 4782322"
+  },
+  {
+    id: "acc-02",
+    dept: "會計室",
+    category: "admin_other",
+    title: "組員",
+    name: "張小姐",
+    extension: "1132",
+    directPhone: "03-4789683",
+    fax: "03-4782322",
+    location: "行政大樓 會計室",
+    note: ""
+  },
+  {
+    id: "acc-03",
+    dept: "會計室",
+    category: "admin_other",
+    title: "佐理員",
+    name: "陳小姐",
+    extension: "1133",
+    directPhone: "03-4789683",
+    fax: "03-4782322",
+    location: "行政大樓 會計室",
+    note: ""
+  },
+
+  // ==================== 教務處 ====================
+  {
+    id: "acad-01",
+    dept: "教務處",
+    category: "academic",
+    title: "主任",
+    name: "李主任",
+    extension: "1201",
+    directPhone: "03-4783574",
+    fax: "03-4882675",
+    location: "行政大樓 教務處",
+    note: "教務處專線: 4783574 / 傳真: 4882675"
+  },
+  {
+    id: "acad-02",
+    dept: "教務處",
+    category: "academic",
+    title: "教學組長",
+    name: "邱組長",
+    extension: "1211",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-03",
+    dept: "教務處",
+    category: "academic",
+    title: "幹事",
+    name: "張小姐",
+    extension: "1212",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-04",
+    dept: "教務處",
+    category: "academic",
+    title: "印刷室",
+    name: "陳先生",
+    extension: "1213",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 印刷室",
+    note: "試卷及講義印刷業務"
+  },
+  {
+    id: "acad-05",
+    dept: "教務處",
+    category: "academic",
+    title: "註冊組長",
+    name: "賴組長",
+    extension: "1221",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "學籍成績與註冊"
+  },
+  {
+    id: "acad-06",
+    dept: "教務處",
+    category: "academic",
+    title: "幹事",
+    name: "曾小姐",
+    extension: "1222",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-07",
+    dept: "教務處",
+    category: "academic",
+    title: "設備組長",
+    name: "鄭組長",
+    extension: "1231",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "教學設備管理"
+  },
+  {
+    id: "acad-08",
+    dept: "教務處",
+    category: "academic",
+    title: "助理員",
+    name: "謝小姐",
+    extension: "1232",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-09",
+    dept: "教務處",
+    category: "academic",
+    title: "書記",
+    name: "吳先生",
+    extension: "1233",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-10",
+    dept: "教務處",
+    category: "academic",
+    title: "數位前導助理",
+    name: "王小姐",
+    extension: "1234",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "前導學校計畫"
+  },
+  {
+    id: "acad-11",
+    dept: "教務處",
+    category: "academic",
+    title: "實驗研究組長",
+    name: "邱組長",
+    extension: "1241",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "專案研究與各項競賽"
+  },
+  {
+    id: "acad-12",
+    dept: "教務處",
+    category: "academic",
+    title: "幹事",
+    name: "宋先生",
+    extension: "1242",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-13",
+    dept: "教務處",
+    category: "academic",
+    title: "均質化專案助理",
+    name: "專案助理",
+    extension: "1243",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "均質化計畫業務"
+  },
+  {
+    id: "acad-14",
+    dept: "教務處",
+    category: "academic",
+    title: "學習歷程檔案助理",
+    name: "楊小姐",
+    extension: "1244",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "學生學習歷程檔案管理"
+  },
+  {
+    id: "acad-15",
+    dept: "教務處",
+    category: "academic",
+    title: "試務組組長",
+    name: "蘇組長",
+    extension: "1251",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "各項考務與試務安排"
+  },
+  {
+    id: "acad-16",
+    dept: "教務處",
+    category: "academic",
+    title: "幹事",
+    name: "蔡小姐",
+    extension: "1252",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-17",
+    dept: "教務處",
+    category: "academic",
+    title: "教務處",
+    name: "預留分機",
+    extension: "1261",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: ""
+  },
+  {
+    id: "acad-18",
+    dept: "教務處",
+    category: "academic",
+    title: "英語教師",
+    name: "英語教師",
+    extension: "1262",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 / 教學區",
+    note: "英語科教學"
+  },
+  {
+    id: "acad-19",
+    dept: "教務處",
+    category: "academic",
+    title: "雙語助理",
+    name: "葉先生",
+    extension: "1263",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 教務處",
+    note: "雙語教學推動"
+  },
+  {
+    id: "acad-20",
+    dept: "教務處",
+    category: "academic",
+    title: "雙語教師",
+    name: "高老師",
+    extension: "1264",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 / 雙語教室",
+    note: "雙語教學推動"
+  },
+
+  // ==================== 總務處 ====================
+  {
+    id: "gen-01",
+    dept: "總務處",
+    category: "general",
+    title: "主任",
+    name: "劉主任",
+    extension: "1401",
+    directPhone: "03-4783349",
+    fax: "03-4780164",
+    location: "行政大樓 總務處",
+    note: "總務處專線: 4783349 / 傳真: 4780164"
+  },
+  {
+    id: "gen-02",
+    dept: "總務處",
+    category: "general",
+    title: "文書組長",
+    name: "黃組長",
+    extension: "1411",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: "公文收發與檔案管理"
+  },
+  {
+    id: "gen-03",
+    dept: "總務處",
+    category: "general",
+    title: "臨時人員",
+    name: "鍾小姐",
+    extension: "1412",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: ""
+  },
+  {
+    id: "gen-04",
+    dept: "總務處",
+    category: "general",
+    title: "出納組長",
+    name: "黃組長",
+    extension: "1421",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: "出納與各項學雜費業務"
+  },
+  {
+    id: "gen-05",
+    dept: "總務處",
+    category: "general",
+    title: "庶務組長",
+    name: "劉組長",
+    extension: "1431",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: "校舍營繕與庶務採購"
+  },
+  {
+    id: "gen-06",
+    dept: "總務處",
+    category: "general",
+    title: "財管管理員",
+    name: "謝先生",
+    extension: "1432",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: "校產與財產管理"
+  },
+  {
+    id: "gen-07",
+    dept: "總務處",
+    category: "general",
+    title: "採購幹事",
+    name: "張先生",
+    extension: "1433",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: "各項政府採購業務"
+  },
+  {
+    id: "gen-08",
+    dept: "總務處",
+    category: "general",
+    title: "學務創新人力",
+    name: "彭先生",
+    extension: "1434",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: ""
+  },
+  {
+    id: "gen-09",
+    dept: "總務處",
+    category: "general",
+    title: "臨時人員",
+    name: "宋先生",
+    extension: "1435",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 總務處",
+    note: ""
+  },
+
+  // ==================== 員生社 ====================
+  {
+    id: "coop-01",
+    dept: "員生社",
+    category: "admin_other",
+    title: "員生社經理/幹事",
+    name: "林小姐",
+    extension: "1491",
+    directPhone: "03-4750453",
+    fax: "",
+    location: "員生消費合作社",
+    note: "直撥電話: 4750453"
+  },
+
+  // ==================== 導師辦公室 ====================
+  {
+    id: "tea-01",
+    dept: "導師辦公室",
+    category: "teachers",
+    title: "悅知樓1樓導師室 (高一)",
+    name: "高一導師群",
+    extension: "1361 / 1365",
+    extensionList: ["1361", "1365"],
+    directPhone: "",
+    fax: "",
+    location: "悅知樓 1樓",
+    note: "高一年級導師辦公室"
+  },
+  {
+    id: "tea-02",
+    dept: "導師辦公室",
+    category: "teachers",
+    title: "悅知樓2樓導師室 (高一)",
+    name: "高一導師群",
+    extension: "1366",
+    extensionList: ["1366"],
+    directPhone: "",
+    fax: "",
+    location: "悅知樓 2樓",
+    note: "高一年級導師辦公室"
+  },
+  {
+    id: "tea-03",
+    dept: "導師辦公室",
+    category: "teachers",
+    title: "悅知樓3樓導師室 (高二)",
+    name: "高二導師群",
+    extension: "1362 / 1364",
+    extensionList: ["1362", "1364"],
+    directPhone: "",
+    fax: "",
+    location: "悅知樓 3樓",
+    note: "高二年級導師辦公室"
+  },
+  {
+    id: "tea-04",
+    dept: "導師辦公室",
+    category: "teachers",
+    title: "日新樓1樓導師室 (高三)",
+    name: "高三導師群",
+    extension: "1363 / 1367",
+    extensionList: ["1363", "1367"],
+    directPhone: "",
+    fax: "",
+    location: "日新樓 1樓",
+    note: "高三年級導師辦公室"
+  },
+
+  // ==================== 專任教師辦公室 ====================
+  {
+    id: "tea-05",
+    dept: "專任教師辦公室",
+    category: "teachers",
+    title: "蘊慧樓1樓專一辦公室",
+    name: "專任教師群",
+    extension: "1271 / 1275",
+    extensionList: ["1271", "1275"],
+    directPhone: "",
+    fax: "",
+    location: "蘊慧樓 1樓",
+    note: "專一教師辦公室"
+  },
+  {
+    id: "tea-06",
+    dept: "專任教師辦公室",
+    category: "teachers",
+    title: "蘊慧樓2樓專二辦公室",
+    name: "專任教師群",
+    extension: "1272",
+    extensionList: ["1272"],
+    directPhone: "",
+    fax: "",
+    location: "蘊慧樓 2樓",
+    note: "專二教師辦公室"
+  },
+  {
+    id: "tea-07",
+    dept: "專任教師辦公室",
+    category: "teachers",
+    title: "日新樓2樓專三辦公室",
+    name: "專任教師群",
+    extension: "1273",
+    extensionList: ["1273"],
+    directPhone: "",
+    fax: "",
+    location: "日新樓 2樓",
+    note: "專三教師辦公室"
+  },
+  {
+    id: "tea-08",
+    dept: "專任教師辦公室",
+    category: "teachers",
+    title: "日新樓3樓專四辦公室",
+    name: "專任教師群",
+    extension: "1274",
+    extensionList: ["1274"],
+    directPhone: "",
+    fax: "",
+    location: "日新樓 3樓",
+    note: "專四教師辦公室"
+  },
+
+  // ==================== 實驗室 ====================
+  {
+    id: "lab-01",
+    dept: "實驗室",
+    category: "classrooms",
+    title: "化學實驗室",
+    name: "化學實驗室",
+    extension: "1373",
+    directPhone: "",
+    fax: "",
+    location: "實驗大樓 / 科學館",
+    note: "自然科學領域"
+  },
+  {
+    id: "lab-02",
+    dept: "實驗室",
+    category: "classrooms",
+    title: "基礎理化實驗室",
+    name: "基礎理化實驗室",
+    extension: "1374",
+    directPhone: "",
+    fax: "",
+    location: "實驗大樓 / 科學館",
+    note: "自然科學領域"
+  },
+  {
+    id: "lab-03",
+    dept: "實驗室",
+    category: "classrooms",
+    title: "物理實驗室",
+    name: "物理實驗室",
+    extension: "1375",
+    directPhone: "",
+    fax: "",
+    location: "實驗大樓 / 科學館",
+    note: "自然科學領域"
+  },
+  {
+    id: "lab-04",
+    dept: "實驗室",
+    category: "classrooms",
+    title: "生物實驗室",
+    name: "生物實驗室",
+    extension: "1376",
+    directPhone: "",
+    fax: "",
+    location: "實驗大樓 / 科學館",
+    note: "生命科學領域"
+  },
+  {
+    id: "lab-05",
+    dept: "實驗室",
+    category: "classrooms",
+    title: "基礎生物實驗室",
+    name: "基礎生物實驗室",
+    extension: "1378",
+    directPhone: "",
+    fax: "",
+    location: "實驗大樓 / 科學館",
+    note: "生命科學領域"
+  },
+  {
+    id: "lab-06",
+    dept: "實驗室",
+    category: "classrooms",
+    title: "地科實驗室",
+    name: "地球科學實驗室",
+    extension: "1379",
+    directPhone: "",
+    fax: "",
+    location: "實驗大樓 / 科學館",
+    note: "地球科學領域"
+  },
+
+  // ==================== 專科教室 ====================
+  {
+    id: "spec-01",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "校史室",
+    name: "啟明樓校史室",
+    extension: "1284",
+    directPhone: "",
+    fax: "",
+    location: "啟明樓",
+    note: "校史文獻典藏"
+  },
+  {
+    id: "spec-02",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "語言教室",
+    name: "語言教室",
+    extension: "1285",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "外語學習專用"
+  },
+  {
+    id: "spec-03",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "電腦機房",
+    name: "蘊慧樓電腦機房",
+    extension: "1286",
+    directPhone: "",
+    fax: "",
+    location: "蘊慧樓",
+    note: "校園網路核心機房"
+  },
+  {
+    id: "spec-04",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "電腦教室一",
+    name: "電腦教室一",
+    extension: "1287",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "資訊教學"
+  },
+  {
+    id: "spec-05",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "視聽一教室",
+    name: "視聽一教室",
+    extension: "1288",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "多媒體大班教學"
+  },
+  {
+    id: "spec-06",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "電腦教室二",
+    name: "電腦教室二",
+    extension: "1289",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "資訊教學"
+  },
+  {
+    id: "spec-07",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "美術教室",
+    name: "美術教室",
+    extension: "1291",
+    directPhone: "",
+    fax: "",
+    location: "藝能館",
+    note: "藝術教學與創作"
+  },
+  {
+    id: "spec-08",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "科技應用教室",
+    name: "科技應用教室",
+    extension: "1292",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "科技領域課程"
+  },
+  {
+    id: "spec-09",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "新興科技推廣教室",
+    name: "新興科技推廣教室",
+    extension: "1293",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "新興科技體驗與研發"
+  },
+  {
+    id: "spec-10",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "雙語教室",
+    name: "雙語教室",
+    extension: "1294",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "雙語沉浸式學習空間"
+  },
+  {
+    id: "spec-11",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "電腦教室三",
+    name: "電腦教室三",
+    extension: "1295",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "資訊教育"
+  },
+  {
+    id: "spec-12",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "探究與實作教室",
+    name: "探究與實作教室",
+    extension: "1296",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "108課綱探究與實作專用"
+  },
+  {
+    id: "spec-13",
+    dept: "專科教室",
+    category: "classrooms",
+    title: "環境教育中心",
+    name: "環境教育中心",
+    extension: "1297",
+    directPhone: "",
+    fax: "",
+    location: "專科大樓",
+    note: "環境生態永續教學"
+  },
+
+  // ==================== 日新樓專科教室 ====================
+  {
+    id: "rixin-01",
+    dept: "日新樓專科教室",
+    category: "classrooms",
+    title: "英語情境教室",
+    name: "英語情境教室",
+    extension: "1711",
+    directPhone: "",
+    fax: "",
+    location: "日新樓",
+    note: "英語互動情境模擬"
+  },
+  {
+    id: "rixin-02",
+    dept: "日新樓專科教室",
+    category: "classrooms",
+    title: "日新樓展演中心",
+    name: "日新樓展演中心",
+    extension: "1712",
+    directPhone: "",
+    fax: "",
+    location: "日新樓",
+    note: "小型展覽與成果發表"
+  },
+  {
+    id: "rixin-03",
+    dept: "日新樓專科教室",
+    category: "classrooms",
+    title: "護理教室",
+    name: "護理教室",
+    extension: "1751",
+    directPhone: "",
+    fax: "",
+    location: "日新樓",
+    note: "健康與護理教學"
+  },
+  {
+    id: "rixin-04",
+    dept: "日新樓專科教室",
+    category: "classrooms",
+    title: "計概教室",
+    name: "計概教室",
+    extension: "1752",
+    directPhone: "",
+    fax: "",
+    location: "日新樓",
+    note: "計算機概論與程式設計"
+  },
+  {
+    id: "rixin-05",
+    dept: "日新樓專科教室",
+    category: "classrooms",
+    title: "音樂教室",
+    name: "音樂教室",
+    extension: "1761",
+    directPhone: "",
+    fax: "",
+    location: "日新樓",
+    note: "音樂術科教室"
+  },
+  {
+    id: "rixin-06",
+    dept: "日新樓專科教室",
+    category: "classrooms",
+    title: "藝術生活教室",
+    name: "藝術生活教室",
+    extension: "1764",
+    directPhone: "",
+    fax: "",
+    location: "日新樓",
+    note: "藝術生活選修課程"
+  },
+  {
+    id: "rixin-07",
+    dept: "日新樓專科教室",
+    category: "classrooms",
+    title: "視覺藝術教室",
+    name: "視覺藝術教室",
+    extension: "1765",
+    directPhone: "",
+    fax: "",
+    location: "日新樓",
+    note: "美術與視覺創作"
+  },
+
+  // ==================== 御風樓 ====================
+  {
+    id: "yuf-01",
+    dept: "御風樓",
+    category: "buildings",
+    title: "御風2-1",
+    name: "御風樓 2-1 教室",
+    extension: "2421",
+    directPhone: "",
+    fax: "",
+    location: "御風樓 2樓",
+    note: ""
+  },
+  {
+    id: "yuf-02",
+    dept: "御風樓",
+    category: "buildings",
+    title: "御風2-2",
+    name: "御風樓 2-2 教室",
+    extension: "2422",
+    directPhone: "",
+    fax: "",
+    location: "御風樓 2樓",
+    note: ""
+  },
+  {
+    id: "yuf-03",
+    dept: "御風樓",
+    category: "buildings",
+    title: "御風2-3",
+    name: "御風樓 2-3 教室",
+    extension: "2423",
+    directPhone: "",
+    fax: "",
+    location: "御風樓 2樓",
+    note: ""
+  },
+  {
+    id: "yuf-04",
+    dept: "御風樓",
+    category: "buildings",
+    title: "御風3-1",
+    name: "御風樓 3-1 教室",
+    extension: "2431",
+    directPhone: "",
+    fax: "",
+    location: "御風樓 3樓",
+    note: ""
+  },
+  {
+    id: "yuf-05",
+    dept: "御風樓",
+    category: "buildings",
+    title: "御風3-2",
+    name: "御風樓 3-2 教室",
+    extension: "2432",
+    directPhone: "",
+    fax: "",
+    location: "御風樓 3樓",
+    note: ""
+  },
+  {
+    id: "yuf-06",
+    dept: "御風樓",
+    category: "buildings",
+    title: "御風3-3",
+    name: "御風樓 3-3 教室",
+    extension: "2433",
+    directPhone: "",
+    fax: "",
+    location: "御風樓 3樓",
+    note: ""
+  },
+  {
+    id: "yuf-07",
+    dept: "御風樓",
+    category: "buildings",
+    title: "御風3-4",
+    name: "御風樓 3-4 教室",
+    extension: "2434",
+    directPhone: "",
+    fax: "",
+    location: "御風樓 3樓",
+    note: ""
+  },
+  {
+    id: "yuf-08",
+    dept: "御風樓",
+    category: "buildings",
+    title: "社團教室2",
+    name: "社團教室二",
+    extension: "2435",
+    directPhone: "",
+    fax: "",
+    location: "御風樓",
+    note: "學生社團活動空間"
+  },
+
+  // ==================== 生科大樓 ====================
+  {
+    id: "bio-01",
+    dept: "生科大樓",
+    category: "buildings",
+    title: "體育器材室",
+    name: "體育器材室",
+    extension: "1811",
+    directPhone: "",
+    fax: "",
+    location: "生科大樓 1樓",
+    note: "體育課運動器材借用"
+  },
+  {
+    id: "bio-02",
+    dept: "生科大樓",
+    category: "buildings",
+    title: "烹飪教室",
+    name: "烹飪教室",
+    extension: "1822",
+    directPhone: "",
+    fax: "",
+    location: "生科大樓 2樓",
+    note: "烹飪烘焙教學"
+  },
+  {
+    id: "bio-03",
+    dept: "生科大樓",
+    category: "buildings",
+    title: "生活科技教室",
+    name: "生活科技教室",
+    extension: "1821",
+    directPhone: "",
+    fax: "",
+    location: "生科大樓 2樓",
+    note: "生活科技手作工藝"
+  },
+  {
+    id: "bio-04",
+    dept: "生科大樓",
+    category: "buildings",
+    title: "家政教室",
+    name: "家政教室",
+    extension: "1822",
+    directPhone: "",
+    fax: "",
+    location: "生科大樓 2樓",
+    note: "家政與生活藝術"
+  },
+
+  // ==================== 實習處 ====================
+  {
+    id: "voc-01",
+    dept: "實習處",
+    category: "internship",
+    title: "實習處主任",
+    name: "簡主任",
+    extension: "1701",
+    directPhone: "",
+    fax: "",
+    location: "實習大樓 實習處",
+    note: "技職與實習教育總策劃"
+  },
+  {
+    id: "voc-02",
+    dept: "實習處",
+    category: "internship",
+    title: "實習就業組長",
+    name: "蔡組長",
+    extension: "1702",
+    directPhone: "",
+    fax: "",
+    location: "實習大樓 實習處",
+    note: "學生校外實習與就業輔導"
+  },
+  {
+    id: "voc-03",
+    dept: "實習處",
+    category: "internship",
+    title: "資訊科主任",
+    name: "廖主任",
+    extension: "1703",
+    directPhone: "",
+    fax: "",
+    location: "實習大樓 資訊科辦公室",
+    note: "資訊科專業課程"
+  },
+  {
+    id: "voc-04",
+    dept: "實習處",
+    category: "internship",
+    title: "技佐",
+    name: "林先生",
+    extension: "1704",
+    directPhone: "",
+    fax: "",
+    location: "實習大樓 實習處",
+    note: ""
+  },
+  {
+    id: "voc-05",
+    dept: "實習處",
+    category: "internship",
+    title: "電子科主任",
+    name: "余主任",
+    extension: "1705",
+    directPhone: "",
+    fax: "",
+    location: "實習大樓 電子科辦公室",
+    note: "電子科專業課程"
+  },
+  {
+    id: "voc-06",
+    dept: "實習處",
+    category: "internship",
+    title: "技士",
+    name: "卓小姐",
+    extension: "1706",
+    directPhone: "",
+    fax: "",
+    location: "實習大樓 實習處",
+    note: ""
+  },
+
+  // ==================== 學務處 ====================
+  {
+    id: "stu-01",
+    dept: "學務處",
+    category: "student",
+    title: "主任",
+    name: "呂主任",
+    extension: "1301",
+    directPhone: "03-4758950",
+    fax: "03-4757034",
+    location: "行政大樓 學務處",
+    note: "學務處專線: 4758950 / 傳真: 4757034"
+  },
+  {
+    id: "stu-02",
+    dept: "學務處",
+    category: "student",
+    title: "午餐秘書",
+    name: "李老師",
+    extension: "1302",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: "學校營養午餐業務"
+  },
+  {
+    id: "stu-03",
+    dept: "學務處",
+    category: "student",
+    title: "學務創新人力",
+    name: "呂先生",
+    extension: "1303",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: ""
+  },
+  {
+    id: "stu-04",
+    dept: "學務處",
+    category: "student",
+    title: "訓育組長",
+    name: "簡組長",
+    extension: "1311",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: "訓育、班聯會與週會活動"
+  },
+  {
+    id: "stu-05",
+    dept: "學務處",
+    category: "student",
+    title: "幹事",
+    name: "傅小姐",
+    extension: "1312",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: ""
+  },
+  {
+    id: "stu-06",
+    dept: "學務處",
+    category: "student",
+    title: "活動組長",
+    name: "魏組長",
+    extension: "1321",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: "學生社團與各項課外活動"
+  },
+  {
+    id: "stu-07",
+    dept: "學務處",
+    category: "student",
+    title: "學務創新人力",
+    name: "林先生",
+    extension: "1322",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: ""
+  },
+  {
+    id: "stu-08",
+    dept: "學務處",
+    category: "student",
+    title: "體育組長",
+    name: "廖組長",
+    extension: "1331",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: "體育課程、校隊及運動會"
+  },
+  {
+    id: "stu-09",
+    dept: "學務處",
+    category: "student",
+    title: "游泳池",
+    name: "陳先生",
+    extension: "1333",
+    directPhone: "",
+    fax: "",
+    location: "校園溫水游泳池",
+    note: "游泳池營運管理"
+  },
+  {
+    id: "stu-10",
+    dept: "學務處",
+    category: "student",
+    title: "管理員",
+    name: "鍾小姐",
+    extension: "1334",
+    directPhone: "",
+    fax: "",
+    location: "學務處 / 場館",
+    note: "運動場館管理"
+  },
+  {
+    id: "stu-11",
+    dept: "學務處",
+    category: "student",
+    title: "跆拳道館",
+    name: "跆拳道館",
+    extension: "1335",
+    directPhone: "",
+    fax: "",
+    location: "體育館 跆拳道館",
+    note: "跆拳道專項訓練"
+  },
+  {
+    id: "stu-12",
+    dept: "學務處",
+    category: "student",
+    title: "衛生組長",
+    name: "詹組長",
+    extension: "1341",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: "環境衛生、資源回收與整潔評分"
+  },
+  {
+    id: "stu-13",
+    dept: "學務處",
+    category: "student",
+    title: "護理師 (健康中心)",
+    name: "陳小姐",
+    extension: "1342",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 1樓健康中心",
+    note: "傷病緊急救護與學生健康檢查"
+  },
+  {
+    id: "stu-14",
+    dept: "學務處",
+    category: "student",
+    title: "學務創新人力",
+    name: "張先生",
+    extension: "1343",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 學務處",
+    note: ""
+  },
+  {
+    id: "stu-15",
+    dept: "學務處",
+    category: "student",
+    title: "健康中心",
+    name: "陳小姐",
+    extension: "1119",
+    directPhone: "",
+    fax: "",
+    location: "健康中心 (1樓)",
+    note: "學生傷病緊急照護"
+  },
+  {
+    id: "stu-16",
+    dept: "學務處",
+    category: "student",
+    title: "禮堂準備室",
+    name: "禮堂準備室",
+    extension: "1324",
+    directPhone: "",
+    fax: "",
+    location: "大禮堂",
+    note: "集會活動後台準備"
+  },
+
+  // ==================== 校安中心 ====================
+  {
+    id: "sec-01",
+    dept: "校安中心",
+    category: "student",
+    title: "校安中心 (生輔組長)",
+    name: "張組長",
+    extension: "1352",
+    directPhone: "03-4854998",
+    fax: "03-4780428",
+    location: "校安中心 / 生輔組",
+    note: "校安專線: 4854998 / 傳真: 4780428"
+  },
+  {
+    id: "sec-02",
+    dept: "校安中心",
+    category: "student",
+    title: "學務創新人力",
+    name: "廖先生",
+    extension: "1351",
+    directPhone: "",
+    fax: "",
+    location: "校安中心",
+    note: "校園安全維護"
+  },
+  {
+    id: "sec-03",
+    dept: "校安中心",
+    category: "student",
+    title: "學務創新人力",
+    name: "李先生",
+    extension: "1353",
+    directPhone: "",
+    fax: "",
+    location: "校安中心",
+    note: "校園安全維護"
+  },
+  {
+    id: "sec-04",
+    dept: "校安中心",
+    category: "student",
+    title: "學務創新人力",
+    name: "陳先生",
+    extension: "1354",
+    directPhone: "",
+    fax: "",
+    location: "校安中心",
+    note: "校園安全維護"
+  },
+  {
+    id: "sec-05",
+    dept: "校安中心",
+    category: "student",
+    title: "幹事",
+    name: "范小姐",
+    extension: "1355",
+    directPhone: "",
+    fax: "",
+    location: "校安中心",
+    note: ""
+  },
+  {
+    id: "sec-06",
+    dept: "校安中心",
+    category: "student",
+    title: "學務創新人力",
+    name: "郭先生",
+    extension: "1356",
+    directPhone: "",
+    fax: "",
+    location: "校安中心",
+    note: "校園安全維護"
+  },
+  {
+    id: "sec-07",
+    dept: "校安中心",
+    category: "student",
+    title: "學務創新人力",
+    name: "彭先生",
+    extension: "1357",
+    directPhone: "",
+    fax: "",
+    location: "校安中心",
+    note: "校園安全維護"
+  },
+
+  // ==================== 輔導室 ====================
+  {
+    id: "coun-01",
+    dept: "輔導室",
+    category: "counseling",
+    title: "輔導主任",
+    name: "林主任",
+    extension: "1503",
+    directPhone: "03-4758437",
+    fax: "",
+    location: "行政大樓 輔導室",
+    note: "輔導專線: 4758437"
+  },
+  {
+    id: "coun-02",
+    dept: "輔導室",
+    category: "counseling",
+    title: "專任輔導教師",
+    name: "陳老師",
+    extension: "1504",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 輔導室",
+    note: "學生個別心理輔導"
+  },
+  {
+    id: "coun-03",
+    dept: "輔導室",
+    category: "counseling",
+    title: "專任輔導教師",
+    name: "吳老師",
+    extension: "1507",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 輔導室",
+    note: "學生個別心理輔導"
+  },
+  {
+    id: "coun-04",
+    dept: "輔導室",
+    category: "counseling",
+    title: "專任輔導教師",
+    name: "金老師",
+    extension: "1501",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 輔導室",
+    note: "學生個別心理輔導"
+  },
+  {
+    id: "coun-05",
+    dept: "輔導室",
+    category: "counseling",
+    title: "專任輔導教師",
+    name: "陳老師",
+    extension: "1502",
+    directPhone: "",
+    fax: "",
+    location: "行政大樓 輔導室",
+    note: "學生個別心理輔導"
+  },
+  {
+    id: "coun-06",
+    dept: "輔導室",
+    category: "counseling",
+    title: "特教教師 1",
+    name: "何老師",
+    extension: "1505",
+    directPhone: "",
+    fax: "",
+    location: "學習中心 / 特教組",
+    note: "特殊教育學生輔導"
+  },
+  {
+    id: "coun-07",
+    dept: "輔導室",
+    category: "counseling",
+    title: "特教教師 2",
+    name: "林老師",
+    extension: "1506",
+    directPhone: "",
+    fax: "",
+    location: "學習中心 / 特教組",
+    note: "特殊教育學生輔導"
+  },
+  {
+    id: "coun-08",
+    dept: "輔導室",
+    category: "counseling",
+    title: "特教教師 3",
+    name: "曾老師",
+    extension: "1511",
+    directPhone: "",
+    fax: "",
+    location: "學習中心 / 特教組",
+    note: "特殊教育學生輔導"
+  },
+  {
+    id: "coun-09",
+    dept: "輔導室",
+    category: "counseling",
+    title: "生涯資訊室",
+    name: "生涯資訊室",
+    extension: "1508",
+    directPhone: "",
+    fax: "",
+    location: "輔導室旁",
+    note: "升學及生涯職涯規劃資料"
+  },
+  {
+    id: "coun-10",
+    dept: "輔導室",
+    category: "counseling",
+    title: "團體諮商室",
+    name: "團體諮商室",
+    extension: "1509",
+    directPhone: "",
+    fax: "",
+    location: "輔導室旁",
+    note: "團體心理動力與探索"
+  },
+  {
+    id: "coun-11",
+    dept: "輔導室",
+    category: "counseling",
+    title: "學習中心",
+    name: "學習中心",
+    extension: "1510",
+    directPhone: "",
+    fax: "",
+    location: "教學大樓",
+    note: "資源班及身心障礙學生服務"
+  },
+
+  // ==================== 圖書館 ====================
+  {
+    id: "lib-01",
+    dept: "圖書館",
+    category: "library",
+    title: "主任",
+    name: "施主任",
+    extension: "1601",
+    directPhone: "03-4780586",
+    fax: "",
+    location: "圖書館大樓",
+    note: "圖書館專線: 4780586"
+  },
+  {
+    id: "lib-02",
+    dept: "圖書館",
+    category: "library",
+    title: "讀者服務組長",
+    name: "何組長",
+    extension: "1602",
+    directPhone: "",
+    fax: "",
+    location: "圖書館大樓",
+    note: "圖書借閱、閱讀推廣活動"
+  },
+  {
+    id: "lib-03",
+    dept: "圖書館",
+    category: "library",
+    title: "資訊媒體組長",
+    name: "賴組長",
+    extension: "1603",
+    directPhone: "",
+    fax: "",
+    location: "圖書館大樓",
+    note: "校園資訊系統、數位媒體管理"
+  },
+  {
+    id: "lib-04",
+    dept: "圖書館",
+    category: "library",
+    title: "幹事 / 讀者服務櫃台",
+    name: "呂小姐",
+    extension: "1605",
+    directPhone: "",
+    fax: "",
+    location: "圖書館 1樓借還書櫃台",
+    note: "借還書與閱覽證服務"
+  },
+  {
+    id: "lib-05",
+    dept: "圖書館",
+    category: "library",
+    title: "喜閱學堂",
+    name: "喜閱學堂",
+    extension: "1606",
+    directPhone: "",
+    fax: "",
+    location: "圖書館 多功能研討區",
+    note: "自主學習與閱讀研討"
+  },
+  {
+    id: "lib-06",
+    dept: "圖書館",
+    category: "library",
+    title: "演藝廳",
+    name: "演藝廳",
+    extension: "1607",
+    directPhone: "",
+    fax: "",
+    location: "圖書館大樓 演藝廳",
+    note: "演講、音樂會及大型典禮"
+  }
+];
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { SCHOOL_CONFIG, CATEGORIES, DIRECTORY_ITEMS };
+}
+
+
+// ==================== AUDIO ENGINE ====================
+/**
+ * 楊梅高中分機一覽表 - Web Audio API 音效引擎與語音朗讀系統
+ * 純原生效能合成，零外部依賴，支援離線環境與各平台瀏覽器
+ */
+
+class SoundEngine {
+  constructor() {
+    this.audioCtx = null;
+    this.soundEnabled = true;
+    this.speechEnabled = true;
+
+    // 從 localStorage 恢復使用者設定
+    const savedSound = localStorage.getItem("ymhs_sound_enabled");
+    if (savedSound !== null) {
+      this.soundEnabled = savedSound === "true";
+    }
+
+    // DTMF 雙音多頻頻率矩陣 (國際標準電信標準)
+    this.dtmfFreqs = {
+      '1': { low: 697, high: 1209 },
+      '2': { low: 697, high: 1336 },
+      '3': { low: 697, high: 1477 },
+      '4': { low: 770, high: 1209 },
+      '5': { low: 770, high: 1336 },
+      '6': { low: 770, high: 1477 },
+      '7': { low: 852, high: 1209 },
+      '8': { low: 852, high: 1336 },
+      '9': { low: 852, high: 1477 },
+      '*': { low: 941, high: 1209 },
+      '0': { low: 941, high: 1336 },
+      '#': { low: 941, high: 1477 }
+    };
+  }
+
+  // 確保 AudioContext 已初始化（瀏覽器需要使用者互動才能啟動）
+  initContext() {
+    if (!this.audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        this.audioCtx = new AudioContextClass();
+      }
+    }
+    if (this.audioCtx && this.audioCtx.state === "suspended") {
+      this.audioCtx.resume();
+    }
+  }
+
+  // 切換音效開關
+  toggleSound() {
+    this.soundEnabled = !this.soundEnabled;
+    localStorage.setItem("ymhs_sound_enabled", this.soundEnabled);
+    if (this.soundEnabled) {
+      this.playDing();
+    }
+    return this.soundEnabled;
+  }
+
+  // 1. 輕快按鈕點擊音 (Pop)
+  playClick() {
+    if (!this.soundEnabled) return;
+    this.initContext();
+    if (!this.audioCtx) return;
+
+    try {
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(600, this.audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, this.audioCtx.currentTime + 0.05);
+
+      gain.gain.setValueAtTime(0.12, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.05);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start();
+      osc.stop(this.audioCtx.currentTime + 0.05);
+    } catch (e) {
+      console.warn("Audio error:", e);
+    }
+  }
+
+  // 2. 複製成功提示雙音階 (Ding-Dong 亮麗和弦)
+  playCopySuccess() {
+    if (!this.soundEnabled) return;
+    this.initContext();
+    if (!this.audioCtx) return;
+
+    try {
+      const now = this.audioCtx.currentTime;
+
+      // 第一個音: D5 (587.33 Hz)
+      this.playNote(587.33, now, 0.14, 0.15);
+      // 第二個音: A5 (880 Hz) 高音明亮
+      this.playNote(880.00, now + 0.08, 0.28, 0.15);
+      // 和音疊加 (增添晶瑩質感): F#6 (1479.98 Hz)
+      this.playNote(1479.98, now + 0.10, 0.22, 0.06);
+    } catch (e) {
+      console.warn("Audio error:", e);
+    }
+  }
+
+  playNote(freq, startTime, duration, maxGain = 0.1) {
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(freq, startTime);
+
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(maxGain, startTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+    osc.connect(gain);
+    gain.connect(this.audioCtx.destination);
+
+    osc.start(startTime);
+    osc.stop(startTime + duration);
+  }
+
+  // 3. 收藏星星音效 (清脆向上琶音)
+  playFavorite(isAdded = true) {
+    if (!this.soundEnabled) return;
+    this.initContext();
+    if (!this.audioCtx) return;
+
+    try {
+      const now = this.audioCtx.currentTime;
+      if (isAdded) {
+        // C6 -> E6 -> G6 升調
+        this.playNote(1046.50, now, 0.09, 0.1);
+        this.playNote(1318.51, now + 0.07, 0.09, 0.1);
+        this.playNote(1567.98, now + 0.14, 0.2, 0.12);
+      } else {
+        // 降調
+        this.playNote(1318.51, now, 0.08, 0.08);
+        this.playNote(987.77, now + 0.07, 0.15, 0.08);
+      }
+    } catch (e) {
+      console.warn("Audio error:", e);
+    }
+  }
+
+  // 4. 標準 DTMF 電話撥號音（雙音多頻）
+  playDTMF(char) {
+    if (!this.soundEnabled) return;
+    this.initContext();
+    if (!this.audioCtx) return;
+
+    const freqs = this.dtmfFreqs[char];
+    if (!freqs) {
+      this.playClick();
+      return;
+    }
+
+    try {
+      const now = this.audioCtx.currentTime;
+      const duration = 0.16;
+
+      const oscLow = this.audioCtx.createOscillator();
+      const oscHigh = this.audioCtx.createOscillator();
+      const gainLow = this.audioCtx.createGain();
+      const gainHigh = this.audioCtx.createGain();
+      const masterGain = this.audioCtx.createGain();
+
+      oscLow.type = "sine";
+      oscLow.frequency.setValueAtTime(freqs.low, now);
+
+      oscHigh.type = "sine";
+      oscHigh.frequency.setValueAtTime(freqs.high, now);
+
+      gainLow.gain.setValueAtTime(0.12, now);
+      gainHigh.gain.setValueAtTime(0.12, now);
+
+      masterGain.gain.setValueAtTime(0.2, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      oscLow.connect(gainLow);
+      oscHigh.connect(gainHigh);
+      gainLow.connect(masterGain);
+      gainHigh.connect(masterGain);
+      masterGain.connect(this.audioCtx.destination);
+
+      oscLow.start(now);
+      oscHigh.start(now);
+      oscLow.stop(now + duration);
+      oscHigh.stop(now + duration);
+    } catch (e) {
+      console.warn("DTMF error:", e);
+    }
+  }
+
+  // 5. 撥打電話呼叫音 (模擬標準撥號鈴聲 Ringing)
+  playCallRing(callback) {
+    if (!this.soundEnabled) {
+      if (callback) callback();
+      return;
+    }
+    this.initContext();
+    if (!this.audioCtx) {
+      if (callback) callback();
+      return;
+    }
+
+    try {
+      const now = this.audioCtx.currentTime;
+      // 撥號連線音 440Hz + 480Hz
+      const osc1 = this.audioCtx.createOscillator();
+      const osc2 = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      osc1.frequency.setValueAtTime(440, now);
+      osc2.frequency.setValueAtTime(480, now);
+
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.15, now + 0.1);
+      gain.gain.setValueAtTime(0.15, now + 0.8);
+      gain.gain.linearRampToValueAtTime(0, now + 1.0);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + 1.0);
+      osc2.stop(now + 1.0);
+
+      if (callback) {
+        setTimeout(callback, 1050);
+      }
+    } catch (e) {
+      if (callback) callback();
+    }
+  }
+
+  // 6. 清脆單音 (Ding)
+  playDing() {
+    if (!this.soundEnabled) return;
+    this.initContext();
+    if (!this.audioCtx) return;
+    this.playNote(880, this.audioCtx.currentTime, 0.2, 0.15);
+  }
+
+  // 7. 語音朗讀分機資訊 (Web Speech Synthesis API)
+  speak(text) {
+    if (!("speechSynthesis" in window)) return;
+    try {
+      window.speechSynthesis.cancel(); // 停止先前的朗讀
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "zh-TW";
+      utterance.rate = 1.05; // 稍快而自然
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn("Speech synthesis error:", e);
+    }
+  }
+}
+
+// 全域單例
+const soundEngine = new SoundEngine();
+
+
+// ==================== APP CONTROLLER ====================
+/**
+ * 楊梅高中分機一覽表 - 主應用程式邏輯
+ * 包含：搜尋過濾、分類檢索、字體縮放、虛擬撥號盤、收藏管理、Toast通知、音效整合
+ */
+
+class ExtensionDirectoryApp {
+  constructor() {
+    this.items = DIRECTORY_ITEMS;
+    this.filteredItems = [...this.items];
+    this.currentCategory = "all";
+    this.searchKeyword = "";
+    this.currentView = "grid"; // 'grid' | 'table'
+
+    // 常用分機收藏集 (從 localStorage 讀取)
+    this.favorites = new Set(JSON.parse(localStorage.getItem("ymhs_fav_extensions") || "[]"));
+
+    // 字體大小設定 (1: 標準, 1.15: 大, 1.3: 特大)
+    this.fontScale = parseFloat(localStorage.getItem("ymhs_font_scale") || "1");
+
+    // 虛擬撥號盤當前輸入字串
+    this.dialDigits = "";
+
+    this.initDOM();
+    this.applyFontScale(this.fontScale);
+    this.renderCategoryPills();
+    this.renderDirectory();
+    this.bindEvents();
+    this.updateSoundButtonUI();
+  }
+
+  initDOM() {
+    this.dom = {
+      searchInput: document.getElementById("searchInput"),
+      searchClearBtn: document.getElementById("searchClearBtn"),
+      categoryPillsWrap: document.getElementById("categoryPillsWrap"),
+      statusCount: document.getElementById("statusCount"),
+      directoryGrid: document.getElementById("directoryGrid"),
+      directoryTableWrap: document.getElementById("directoryTableWrap"),
+      directoryTableBody: document.getElementById("directoryTableBody"),
+      emptyState: document.getElementById("emptyState"),
+      resetSearchBtn: document.getElementById("resetSearchBtn"),
+      toastContainer: document.getElementById("toastContainer"),
+      backToTopBtn: document.getElementById("backToTopBtn"),
+      controlPanel: document.getElementById("controlPanel"),
+
+      // 工具列按鈕
+      btnFontSize: document.getElementById("btnFontSize"),
+      fontSizeLabel: document.getElementById("fontSizeLabel"),
+      btnSoundToggle: document.getElementById("btnSoundToggle"),
+      soundIcon: document.getElementById("soundIcon"),
+      soundLabel: document.getElementById("soundLabel"),
+      btnDialPad: document.getElementById("btnDialPad"),
+      btnPrint: document.getElementById("btnPrint"),
+      btnViewGrid: document.getElementById("btnViewGrid"),
+      btnViewTable: document.getElementById("btnViewTable"),
+      btnViewFavorites: document.getElementById("btnViewFavorites"),
+
+      // 虛擬撥號盤 Modal
+      dialModal: document.getElementById("dialModal"),
+      dialCloseBtn: document.getElementById("dialCloseBtn"),
+      dialScreenDigits: document.getElementById("dialScreenDigits"),
+      dialMatchPreview: document.getElementById("dialMatchPreview"),
+      dialKeys: document.querySelectorAll(".dial-key"),
+      dialBackspaceBtn: document.getElementById("dialBackspaceBtn"),
+      dialClearBtn: document.getElementById("dialClearBtn"),
+      dialCallBtn: document.getElementById("dialCallBtn")
+    };
+  }
+
+  bindEvents() {
+    // 搜尋輸入 (即時搜尋防抖)
+    let searchTimer = null;
+    this.dom.searchInput.addEventListener("input", (e) => {
+      this.searchKeyword = e.target.value.trim();
+      this.dom.searchClearBtn.classList.toggle("visible", this.searchKeyword.length > 0);
+
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        this.filterAndRender();
+      }, 100);
+    });
+
+    // 清除搜尋按鈕
+    this.dom.searchClearBtn.addEventListener("click", () => {
+      soundEngine.playClick();
+      this.dom.searchInput.value = "";
+      this.searchKeyword = "";
+      this.dom.searchClearBtn.classList.remove("visible");
+      this.dom.searchInput.focus();
+      this.filterAndRender();
+    });
+
+    // 重設搜尋按鈕
+    if (this.dom.resetSearchBtn) {
+      this.dom.resetSearchBtn.addEventListener("click", () => {
+        soundEngine.playClick();
+        this.dom.searchInput.value = "";
+        this.searchKeyword = "";
+        this.currentCategory = "all";
+        this.updateActivePill();
+        this.filterAndRender();
+      });
+    }
+
+    // 檢視模式切換 (網格 / 表格)
+    this.dom.btnViewGrid.addEventListener("click", () => {
+      soundEngine.playClick();
+      this.setViewMode("grid");
+    });
+    this.dom.btnViewTable.addEventListener("click", () => {
+      soundEngine.playClick();
+      this.setViewMode("table");
+    });
+
+    // 快速查看「常用收藏」
+    this.dom.btnViewFavorites.addEventListener("click", () => {
+      soundEngine.playClick();
+      this.currentCategory = "favorites";
+      this.updateActivePill();
+      this.filterAndRender();
+    });
+
+    // 字體大小循環調整 (標準 -> 大 -> 特大 -> 標準)
+    this.dom.btnFontSize.addEventListener("click", () => {
+      soundEngine.playClick();
+      if (this.fontScale === 1) {
+        this.applyFontScale(1.15);
+      } else if (this.fontScale === 1.15) {
+        this.applyFontScale(1.3);
+      } else {
+        this.applyFontScale(1);
+      }
+      this.showToast(`已切換字體：${this.getFontSizeName()}`, "text");
+    });
+
+    // 音效開關切換
+    this.dom.btnSoundToggle.addEventListener("click", () => {
+      const isEnabled = soundEngine.toggleSound();
+      this.updateSoundButtonUI(isEnabled);
+      this.showToast(isEnabled ? "🔊 音效已開啟" : "🔇 音效已靜音", isEnabled ? "sound-on" : "sound-off");
+    });
+
+    // 開啟虛擬撥號盤
+    this.dom.btnDialPad.addEventListener("click", () => {
+      soundEngine.playClick();
+      this.openDialPad();
+    });
+
+    // 友善列印
+    this.dom.btnPrint.addEventListener("click", () => {
+      soundEngine.playClick();
+      window.print();
+    });
+
+    // 回頂端按鈕
+    window.addEventListener("scroll", () => {
+      const scrolled = window.scrollY > 300;
+      this.dom.backToTopBtn.classList.toggle("visible", scrolled);
+      this.dom.controlPanel.classList.toggle("is-scrolled", window.scrollY > 150);
+    }, { passive: true });
+
+    this.dom.backToTopBtn.addEventListener("click", () => {
+      soundEngine.playClick();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // 撥號盤相關事件綁定
+    this.bindDialPadEvents();
+  }
+
+  // 綁定虛擬撥號盤
+  bindDialPadEvents() {
+    this.dom.dialCloseBtn.addEventListener("click", () => {
+      soundEngine.playClick();
+      this.closeDialPad();
+    });
+
+    this.dom.dialModal.addEventListener("click", (e) => {
+      if (e.target === this.dom.dialModal) {
+        this.closeDialPad();
+      }
+    });
+
+    // 實體按鍵 1-9, 0, *, # 點擊
+    this.dom.dialKeys.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const val = btn.getAttribute("data-dial-val");
+        this.pressDialKey(val);
+      });
+    });
+
+    // 退格鍵
+    this.dom.dialBackspaceBtn.addEventListener("click", () => {
+      soundEngine.playClick();
+      if (this.dialDigits.length > 0) {
+        this.dialDigits = this.dialDigits.slice(0, -1);
+        this.updateDialDisplay();
+      }
+    });
+
+    // 清空鍵
+    this.dom.dialClearBtn.addEventListener("click", () => {
+      soundEngine.playClick();
+      this.dialDigits = "";
+      this.updateDialDisplay();
+    });
+
+    // 撥打按鈕 (綠色通話鍵)
+    this.dom.dialCallBtn.addEventListener("click", () => {
+      if (!this.dialDigits) {
+        this.showToast("請先輸入分機號碼", "info");
+        soundEngine.playClick();
+        return;
+      }
+      this.executeDialCall(this.dialDigits);
+    });
+
+    // 支援鍵盤直接打字 (當撥號盤開啟時)
+    window.addEventListener("keydown", (e) => {
+      if (!this.dom.dialModal.classList.contains("active")) return;
+      if (e.key >= "0" && e.key <= "9" || e.key === "*" || e.key === "#") {
+        e.preventDefault();
+        this.pressDialKey(e.key);
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        this.dialDigits = this.dialDigits.slice(0, -1);
+        this.updateDialDisplay();
+      } else if (e.key === "Escape") {
+        this.closeDialPad();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        this.executeDialCall(this.dialDigits);
+      }
+    });
+  }
+
+  openDialPad(initialExt = "") {
+    this.dialDigits = initialExt;
+    this.updateDialDisplay();
+    this.dom.dialModal.classList.add("active");
+  }
+
+  closeDialPad() {
+    this.dom.dialModal.classList.remove("active");
+  }
+
+  pressDialKey(char) {
+    if (this.dialDigits.length >= 10) return;
+    this.dialDigits += char;
+    soundEngine.playDTMF(char);
+    this.updateDialDisplay();
+  }
+
+  updateDialDisplay() {
+    this.dom.dialScreenDigits.textContent = this.dialDigits || "—";
+
+    // 比對是否有相符的楊梅高中分機
+    if (this.dialDigits.length >= 2) {
+      const match = this.items.find(item => {
+        if (item.extension.includes(this.dialDigits)) return true;
+        if (item.extensionList && item.extensionList.includes(this.dialDigits)) return true;
+        return false;
+      });
+
+      if (match) {
+        this.dom.dialMatchPreview.innerHTML = `🔔 楊梅高中：${match.dept} · <strong>${match.title} ${match.name}</strong>`;
+        this.dom.dialMatchPreview.style.color = "#059669";
+      } else {
+        this.dom.dialMatchPreview.textContent = "輸入 4 碼分機自動比對處室人員";
+        this.dom.dialMatchPreview.style.color = "#64748b";
+      }
+    } else {
+      this.dom.dialMatchPreview.textContent = "請輸入楊梅高中分機號碼";
+      this.dom.dialMatchPreview.style.color = "#64748b";
+    }
+  }
+
+  executeDialCall(extNumber) {
+    soundEngine.playCallRing(() => {
+      // 呼叫撥號協定：03-4789618 代表號轉分機
+      const telUrl = `tel:${SCHOOL_CONFIG.mainNumberRaw},${extNumber}`;
+      this.showToast(`正在撥號：總機 ${SCHOOL_CONFIG.mainNumber} 轉分機 ${extNumber}`, "phone");
+      window.location.href = telUrl;
+    });
+  }
+
+  // 字體大小控制
+  applyFontScale(scale) {
+    this.fontScale = scale;
+    localStorage.setItem("ymhs_font_scale", scale.toString());
+    document.documentElement.style.setProperty("--font-scale", scale.toString());
+    if (this.dom.fontSizeLabel) {
+      this.dom.fontSizeLabel.textContent = this.getFontSizeName();
+    }
+  }
+
+  getFontSizeName() {
+    if (this.fontScale === 1) return "字體: 正常";
+    if (this.fontScale === 1.15) return "字體: 大字";
+    if (this.fontScale === 1.3) return "字體: 特大";
+    return "字體: 正常";
+  }
+
+  // 更新音效按鈕狀態
+  updateSoundButtonUI(isEnabled = soundEngine.soundEnabled) {
+    if (!this.dom.soundLabel) return;
+    if (isEnabled) {
+      this.dom.soundLabel.textContent = "音效: 開啟";
+      this.dom.btnSoundToggle.classList.add("active");
+    } else {
+      this.dom.soundLabel.textContent = "音效: 靜音";
+      this.dom.btnSoundToggle.classList.remove("active");
+    }
+  }
+
+  // 檢視模式切換
+  setViewMode(mode) {
+    this.currentView = mode;
+    this.dom.btnViewGrid.classList.toggle("active", mode === "grid");
+    this.dom.btnViewTable.classList.toggle("active", mode === "table");
+
+    if (mode === "grid") {
+      this.dom.directoryGrid.style.display = "grid";
+      this.dom.directoryTableWrap.style.display = "none";
+    } else {
+      this.dom.directoryGrid.style.display = "none";
+      this.dom.directoryTableWrap.style.display = "block";
+    }
+  }
+
+  // 渲染處室分類膠囊按鈕列
+  renderCategoryPills() {
+    const pillsHTML = CATEGORIES.map(cat => {
+      let count = 0;
+      if (cat.id === "all") {
+        count = this.items.length;
+      } else {
+        count = this.items.filter(item => item.category === cat.id).length;
+      }
+      return `
+        <button class="pill-btn ${cat.id === this.currentCategory ? 'active' : ''}" data-cat-id="${cat.id}">
+          <span>${cat.name}</span>
+          <span class="pill-count">${count}</span>
+        </button>
+      `;
+    }).join("");
+
+    this.dom.categoryPillsWrap.innerHTML = pillsHTML;
+
+    // 綁定點擊事件
+    this.dom.categoryPillsWrap.querySelectorAll(".pill-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        soundEngine.playClick();
+        const catId = btn.getAttribute("data-cat-id");
+        this.currentCategory = catId;
+        this.updateActivePill();
+        this.filterAndRender();
+      });
+    });
+  }
+
+  updateActivePill() {
+    this.dom.categoryPillsWrap.querySelectorAll(".pill-btn").forEach(btn => {
+      const catId = btn.getAttribute("data-cat-id");
+      btn.classList.toggle("active", catId === this.currentCategory);
+    });
+    this.dom.btnViewFavorites.classList.toggle("active", this.currentCategory === "favorites");
+  }
+
+  // 核心過濾器
+  filterAndRender() {
+    const keyword = this.searchKeyword.toLowerCase();
+
+    this.filteredItems = this.items.filter(item => {
+      // 1. 分類過濾
+      if (this.currentCategory === "favorites") {
+        if (!this.favorites.has(item.id)) return false;
+      } else if (this.currentCategory !== "all") {
+        if (item.category !== this.currentCategory) return false;
+      }
+
+      // 2. 關鍵字模糊搜尋 (姓名、職稱、分機、處室、位置、電話、傳真、備註)
+      if (keyword) {
+        const matchDept = item.dept.toLowerCase().includes(keyword);
+        const matchTitle = item.title.toLowerCase().includes(keyword);
+        const matchName = item.name.toLowerCase().includes(keyword);
+        const matchExt = item.extension.toLowerCase().includes(keyword);
+        const matchPhone = (item.directPhone || "").toLowerCase().includes(keyword);
+        const matchFax = (item.fax || "").toLowerCase().includes(keyword);
+        const matchLocation = (item.location || "").toLowerCase().includes(keyword);
+        const matchNote = (item.note || "").toLowerCase().includes(keyword);
+
+        return matchDept || matchTitle || matchName || matchExt || matchPhone || matchFax || matchLocation || matchNote;
+      }
+
+      return true;
+    });
+
+    this.renderDirectory();
+  }
+
+  // 渲染分機卡片與表格
+  renderDirectory() {
+    const count = this.filteredItems.length;
+    this.dom.statusCount.innerHTML = `共找到 <span class="status-highlight">${count}</span> 筆分機資料`;
+
+    if (count === 0) {
+      this.dom.directoryGrid.style.display = "none";
+      this.dom.directoryTableWrap.style.display = "none";
+      this.dom.emptyState.style.display = "flex";
+      return;
+    }
+
+    this.dom.emptyState.style.display = "none";
+    if (this.currentView === "grid") {
+      this.dom.directoryGrid.style.display = "grid";
+      this.dom.directoryTableWrap.style.display = "none";
+    } else {
+      this.dom.directoryGrid.style.display = "none";
+      this.dom.directoryTableWrap.style.display = "block";
+    }
+
+    // 渲染卡片網格視圖
+    this.dom.directoryGrid.innerHTML = this.filteredItems.map(item => this.createCardHTML(item)).join("");
+
+    // 渲染表格視圖
+    this.dom.directoryTableBody.innerHTML = this.filteredItems.map(item => this.createTableRowHTML(item)).join("");
+
+    // 綁定卡片與表格上的互動按鈕 (複製、撥打、收藏、朗讀)
+    this.bindItemActions();
+  }
+
+  // 高亮搜尋關鍵字
+  highlightText(text) {
+    if (!this.searchKeyword || !text) return text;
+    const regex = new RegExp(`(${this.escapeRegExp(this.searchKeyword)})`, "gi");
+    return text.replace(regex, `<mark class="search-highlight">$1</mark>`);
+  }
+
+  escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // 依據處室分類返回對應的精美 SVG 圖示
+  getCategoryIcon(catId) {
+    switch (catId) {
+      case "principal":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+      case "academic":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
+      case "student":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+      case "general":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
+      case "counseling":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+      case "library":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`;
+      case "internship":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>`;
+      case "admin_other":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+      case "teachers":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+      case "classrooms":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 2v7.31L4.14 20.3a2 2 0 0 0 1.72 2.7h12.28a2 2 0 0 0 1.72-2.7L14 9.31V2"/><line x1="8.5" y1="2" x2="15.5" y2="2"/><line x1="7" y1="16" x2="17" y2="16"/></svg>`;
+      case "buildings":
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="18"/><line x1="15" y1="22" x2="15" y2="18"/><line x1="8" y1="6" x2="8.01" y2="6"/><line x1="16" y1="6" x2="16.01" y2="6"/><line x1="8" y1="10" x2="8.01" y2="10"/><line x1="16" y1="10" x2="16.01" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/></svg>`;
+      default:
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M3 7v14M21 7v14M9 3h6v4H9zM9 11h2M13 11h2M9 15h2M13 15h2"/></svg>`;
+    }
+  }
+
+  // 產生分機卡片 HTML
+  createCardHTML(item) {
+    const isFav = this.favorites.has(item.id);
+    const highlightedDept = this.highlightText(item.dept);
+    const highlightedTitle = this.highlightText(item.title);
+    const highlightedName = this.highlightText(item.name);
+    const highlightedExt = this.highlightText(item.extension);
+    const highlightedLocation = this.highlightText(item.location);
+    const catIcon = this.getCategoryIcon(item.category);
+
+    // 判斷第一組主分機號
+    const primaryExt = item.extensionList ? item.extensionList[0] : item.extension.split(/[\s,/]+/)[0];
+
+    return `
+      <div class="ext-card" data-dept-cat="${item.category}" data-id="${item.id}">
+        <div>
+          <!-- 頂部資訊列：處室標籤與功能鍵 -->
+          <div class="card-header-line">
+            <span class="dept-badge">
+              ${catIcon}
+              ${highlightedDept}
+            </span>
+            <div class="card-quick-actions">
+              <!-- 語音朗讀分機 -->
+              <button class="icon-btn tts-btn" title="語音朗讀分機" data-speak-text="${item.dept} ${item.title} ${item.name} 分機 ${item.extension}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+              </button>
+              <!-- 收藏按鈕 -->
+              <button class="icon-btn favorite-btn ${isFav ? 'is-favorite' : ''}" title="${isFav ? '取消常用收藏' : '加入常用收藏'}" data-id="${item.id}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="${isFav ? '#f59e0b' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- 職稱與姓名 (大字清晰) -->
+          <div class="card-identity">
+            <div class="card-title-text">${highlightedTitle}</div>
+            <div class="card-name-text">${highlightedName}</div>
+          </div>
+
+          <!-- 分機號碼醒目區 (大字+點擊複製/撥打) -->
+          <div class="card-ext-box" title="點擊一鍵複製分機號碼" data-copy-val="${primaryExt}" data-name="${item.name}">
+            <div class="ext-num-wrap">
+              <span class="ext-label">分機 EXT</span>
+              <span class="ext-digits">${highlightedExt}</span>
+            </div>
+            <div class="ext-actions-right">
+              <button class="ext-copy-chip" data-copy-val="${primaryExt}" data-name="${item.name}" title="複製分機">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                複製
+              </button>
+              <button class="ext-call-chip card-dial-btn" data-ext="${primaryExt}" title="撥號模擬 / 手機直撥">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                撥打
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部輔助資訊 (專線/傳真/地點) -->
+        <div class="card-meta-list">
+          ${item.location ? `
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>${highlightedLocation}</span>
+            </div>
+          ` : ''}
+
+          ${item.directPhone ? `
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>專線：<a class="meta-link" href="tel:${item.directPhone.replace(/-/g, '')}">${item.directPhone}</a></span>
+            </div>
+          ` : ''}
+
+          ${item.fax ? `
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>傳真：${item.fax}</span>
+            </div>
+          ` : ''}
+
+          ${item.note ? `
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span>${this.highlightText(item.note)}</span>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // 產生表格列 HTML
+  createTableRowHTML(item) {
+    const isFav = this.favorites.has(item.id);
+    const primaryExt = item.extensionList ? item.extensionList[0] : item.extension.split(/[\s,/]+/)[0];
+
+    return `
+      <tr>
+        <td style="width: 40px; text-align: center;">
+          <button class="icon-btn favorite-btn ${isFav ? 'is-favorite' : ''}" style="width: 28px; height: 28px;" data-id="${item.id}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="${isFav ? '#f59e0b' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </button>
+        </td>
+        <td><span class="dept-badge">${this.highlightText(item.dept)}</span></td>
+        <td><strong>${this.highlightText(item.title)}</strong></td>
+        <td>${this.highlightText(item.name)}</td>
+        <td class="table-ext-cell">${this.highlightText(item.extension)}</td>
+        <td>${item.location ? this.highlightText(item.location) : '—'}</td>
+        <td>${item.directPhone ? `<a class="meta-link" href="tel:${item.directPhone.replace(/-/g, '')}">${item.directPhone}</a>` : '—'}</td>
+        <td style="white-space: nowrap;">
+          <button class="ext-copy-chip" data-copy-val="${primaryExt}" data-name="${item.name}" style="margin-right: 4px;">複製</button>
+          <button class="ext-call-chip card-dial-btn" data-ext="${primaryExt}">撥號</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  // 綁定項目互動按鈕
+  bindItemActions() {
+    // 1. 複製按鈕 (以及點擊分機大框一鍵複製)
+    document.querySelectorAll("[data-copy-val]").forEach(el => {
+      el.addEventListener("click", (e) => {
+        // 防止重複觸發
+        e.stopPropagation();
+        const copyVal = el.getAttribute("data-copy-val");
+        const name = el.getAttribute("data-name") || "";
+        this.copyToClipboard(copyVal, name);
+      });
+    });
+
+    // 2. 撥號按鈕 (開啟撥號盤並填入號碼)
+    document.querySelectorAll(".card-dial-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        soundEngine.playClick();
+        const ext = btn.getAttribute("data-ext") || "";
+        this.openDialPad(ext);
+      });
+    });
+
+    // 3. 語音朗讀按鈕
+    document.querySelectorAll(".tts-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        soundEngine.playClick();
+        const text = btn.getAttribute("data-speak-text");
+        soundEngine.speak(text);
+      });
+    });
+
+    // 4. 常用收藏星號按鈕
+    document.querySelectorAll(".favorite-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const id = btn.getAttribute("data-id");
+        this.toggleFavorite(id);
+      });
+    });
+  }
+
+  // 複製至剪貼簿
+  copyToClipboard(text, name = "") {
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      soundEngine.playCopySuccess();
+      const label = name ? `已複製 ${name} 分機：${text}` : `已複製分機號碼：${text}`;
+      this.showToast(label, "clipboard");
+    }).catch(() => {
+      // 舊瀏覽器 fallback
+      const tempInput = document.createElement("input");
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      soundEngine.playCopySuccess();
+      this.showToast(`已複製分機：${text}`, "clipboard");
+    });
+  }
+
+  // 切換常用收藏
+  toggleFavorite(id) {
+    const isAdding = !this.favorites.has(id);
+    if (isAdding) {
+      this.favorites.add(id);
+    } else {
+      this.favorites.delete(id);
+    }
+    localStorage.setItem("ymhs_fav_extensions", JSON.stringify([...this.favorites]));
+    soundEngine.playFavorite(isAdding);
+
+    const targetItem = this.items.find(i => i.id === id);
+    const itemName = targetItem ? `${targetItem.dept} ${targetItem.title}` : "此項目";
+
+    this.showToast(isAdding ? `⭐ 已加入常用收藏：${itemName}` : `已移除常用收藏：${itemName}`, isAdding ? "star-fill" : "star-empty");
+
+    // 重新過濾渲染以保持狀態同步
+    this.renderCategoryPills();
+    this.filterAndRender();
+  }
+
+  // 顯示 Toast 浮動提示
+  showToast(message, type = "info") {
+    const toast = document.createElement("div");
+    toast.className = "toast-msg";
+
+    let iconSVG = `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+    if (type.includes("sound")) {
+      iconSVG = `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`;
+    } else if (type.includes("star")) {
+      iconSVG = `<svg class="toast-icon" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    } else if (type === "phone") {
+      iconSVG = `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
+    }
+
+    toast.innerHTML = `${iconSVG}<span>${message}</span>`;
+    this.dom.toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add("toast-fadeout");
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 250);
+    }, 2400);
+  }
+}
+
+// 頁面加載完成後啟動
+document.addEventListener("DOMContentLoaded", () => {
+  window.app = new ExtensionDirectoryApp();
+});
+
+</script>
+</body>
+</html>
